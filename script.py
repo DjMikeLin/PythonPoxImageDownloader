@@ -2,17 +2,25 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 
-response = requests.get("https://aqueous-dusk-28109.herokuapp.com/champions/")
+def get_links(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    results = [[soup.find('main').find('form').get('action')[1:].capitalize()]]
+    image_links = soup.find_all('img')
+    for link in image_links:
+        temp = [link.find_parent('div').find('div').find('p').text[6:]]
+        temp.append(link.get('data-lazy'))
+        results.append(temp)
+    
+    return results
 
-soup = BeautifulSoup(response.text, 'html.parser')
+types = ['champions', 'spells', 'relics', 'equipments', 'abilities']
 
-image_links = soup.find_all('img')
-
-results = [['Champions']]
-
-for link in image_links:
-    results.append([link.get('data-lazy')])
-
-with open('test.csv', 'w', newline='') as file:
-    write = csv.writer(file)
-    write.writerows(results)
+for type in types:
+    links = get_links("https://aqueous-dusk-28109.herokuapp.com/{}/".format(type))
+    
+    print(links)
+    '''with open('test.csv', 'w', newline='') as file:
+        write = csv.writer(file)
+        write.writerows(links)'''
