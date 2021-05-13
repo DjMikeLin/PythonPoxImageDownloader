@@ -15,12 +15,12 @@ def get_links(url):
     
     return results
 
-types = ['champions', 'spells', 'relics', 'equipments', 'abilities']
+types = ['champions']#, 'spells', 'relics', 'equipments', 'abilities']
 
+final_set = []
 for type in types:
-    links = get_links("https://aqueous-dusk-28109.herokuapp.com/{}/".format(type))
+    final_set.append(get_links("https://aqueous-dusk-28109.herokuapp.com/{}/".format(type)))
     
-    print(links)
-    '''with open('test.csv', 'w', newline='') as file:
-        write = csv.writer(file)
-        write.writerows(links)'''
+with open('test.csv', 'w', newline='') as file:
+    write = csv.writer(file)
+    write.writerows(final_set)
